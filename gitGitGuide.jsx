@@ -88,20 +88,24 @@ const steps = [
       { type: "tip", text: "🔒 Treat this token like a password. Don't share it or commit it to your project." },
     ],
   },
-  {
-    id: 7,
-    emoji: "🚀",
-    title: "Push Your Code to GitHub",
-    color: "#06b6d4",
-    content: [
-      { type: "text", text: "Now connect your local project to GitHub and upload it:" },
-      { type: "code", code: `git remote add origin https://github.com/YOUR-USERNAME/my-project.git\ngit branch -M main\ngit push -u origin main` },
-      { type: "tip", text: "When prompted for password, paste your TOKEN (not your GitHub password)." },
-      { type: "text", text: "After the first push, future pushes are just:" },
-      { type: "code", code: "git push" },
-      { type: "tip", text: "🎊 Refresh your GitHub page — your code should be there!" },
-    ],
-  },
+  
+    {
+        id: 7,
+        emoji: "🚀",
+        title: "Push Your Code to GitHub",
+        color: "#06b6d4",
+        content: [
+          { type: "text", text: "Now connect your local project to GitHub and upload it:" },
+          { type: "code", code: `git remote add origin https://github.com/YOUR-USERNAME/my-project.git\ngit branch -M main\ngit push -u origin main` },
+          { type: "tip", text: "When prompted for password, paste your TOKEN (not your GitHub password)." },
+          { type: "text", text: "If authentication fails, set the URL with your token embedded:" },
+          { type: "code", code: `git remote set-url origin https://YOUR-USERNAME:YOUR-TOKEN@github.com/YOUR-USERNAME/my-project.git` },
+          { type: "tip", text: "🔒 Replace YOUR-USERNAME and YOUR-TOKEN with your actual details. Never share this URL with anyone!" },
+          { type: "text", text: "After the first push, future pushes are just:" },
+          { type: "code", code: "git push" },
+          { type: "tip", text: "🎊 Refresh your GitHub page — your code should be there!" },
+        ],
+      },
   {
     id: 8,
     emoji: "🔄",
