@@ -1,3 +1,4 @@
+// 
 import { useState } from "react";
 
 const steps = [
@@ -11,7 +12,7 @@ const steps = [
       { type: "text", text: "Git doesn't come with Windows by default. You need to install it first." },
       { type: "step", label: "1", text: 'Go to 👉 https://git-scm.com/download/windows and download the installer.' },
       { type: "step", label: "2", text: 'Run the installer. When asked about PATH, choose: "Git from command line and 3rd-party software".' },
-      { type: "step", label: "3", text: "When asked about line endings, choose: \"Checkout Windows-style, commit Unix-style\"." },
+      { type: "step", label: "3", text: 'When asked about line endings, choose: "Checkout Windows-style, commit Unix-style".' },
       { type: "step", label: "4", text: "Finish install, then open PowerShell and verify:" },
       { type: "code", code: "git --version" },
       { type: "tip", text: "✅ You should see something like: git version 2.x.x — that means Git is ready!" },
@@ -78,34 +79,43 @@ const steps = [
   {
     id: 6,
     emoji: "🔑",
-    title: "Connect Local → GitHub (Token Auth)",
+    title: "Setup SSH Key (No Token Needed!)",
     color: "#f59e0b",
     content: [
-      { type: "text", text: "GitHub no longer accepts passwords. You need a Personal Access Token (PAT)." },
-      { type: "step", label: "1", text: "Go to GitHub → your profile photo → Settings → Developer settings → Personal access tokens → Tokens (classic)." },
-      { type: "step", label: "2", text: 'Click "Generate new token (classic)". Name: "My Laptop". Expiry: 90 days. Check the "repo" scope.' },
-      { type: "step", label: "3", text: "Click Generate. COPY the token immediately — you'll never see it again!" },
-      { type: "tip", text: "🔒 Treat this token like a password. Don't share it or commit it to your project." },
+      { type: "text", text: "SSH lets you connect to GitHub without a token or password — set it up once and push forever!" },
+      { type: "text", text: "Step 1 — Generate your SSH key:" },
+      { type: "code", code: `ssh-keygen -t ed25519 -C "your@email.com"\n# Press Enter 3 times for all prompts` },
+      { type: "text", text: "Step 2 — Start SSH agent and add your key:" },
+      { type: "code", code: `Get-Service -Name ssh-agent | Set-Service -StartupType Manual\nStart-Service ssh-agent\nssh-add C:\\Users\\YOUR-NAME\\.ssh\\id_ed25519` },
+      { type: "text", text: "Step 3 — Copy your public key:" },
+      { type: "code", code: "cat C:\\Users\\YOUR-NAME\\.ssh\\id_ed25519.pub" },
+      { type: "tip", text: "📋 Copy the output — it starts with ssh-ed25519 AAAA..." },
+      { type: "text", text: "Step 4 — Add to GitHub:" },
+      { type: "step", label: "1", text: "Go to GitHub → Settings → SSH and GPG keys → New SSH key" },
+      { type: "step", label: "2", text: 'Title: "My Windows Laptop" → paste your key → click Add SSH Key' },
+      { type: "text", text: "Step 5 — Test the connection:" },
+      { type: "code", code: "ssh -T git@github.com" },
+      { type: "tip", text: '✅ You should see: "Hi username! You have successfully authenticated!"' },
     ],
   },
-  
-    {
-        id: 7,
-        emoji: "🚀",
-        title: "Push Your Code to GitHub",
-        color: "#06b6d4",
-        content: [
-          { type: "text", text: "Now connect your local project to GitHub and upload it:" },
-          { type: "code", code: `git remote add origin https://github.com/YOUR-USERNAME/my-project.git\ngit branch -M main\ngit push -u origin main` },
-          { type: "tip", text: "When prompted for password, paste your TOKEN (not your GitHub password)." },
-          { type: "text", text: "If authentication fails, set the URL with your token embedded:" },
-          { type: "code", code: `git remote set-url origin https://YOUR-USERNAME:YOUR-TOKEN@github.com/YOUR-USERNAME/my-project.git` },
-          { type: "tip", text: "🔒 Replace YOUR-USERNAME and YOUR-TOKEN with your actual details. Never share this URL with anyone!" },
-          { type: "text", text: "After the first push, future pushes are just:" },
-          { type: "code", code: "git push" },
-          { type: "tip", text: "🎊 Refresh your GitHub page — your code should be there!" },
-        ],
-      },
+  {
+    id: 7,
+    emoji: "🚀",
+    title: "Push Your Code to GitHub",
+    color: "#06b6d4",
+    content: [
+      { type: "text", text: "Now connect your local project to GitHub and upload it using SSH:" },
+      { type: "code", code: `git remote add origin git@github.com:YOUR-USERNAME/my-project.git\ngit branch -M main\ngit push -u origin main` },
+      { type: "tip", text: "✅ With SSH, no token or password needed — it just works!" },
+      { type: "text", text: "If you already connected with HTTPS, switch to SSH:" },
+      { type: "code", code: "git remote set-url origin git@github.com:YOUR-USERNAME/my-project.git" },
+      { type: "text", text: "Verify the connection:" },
+      { type: "code", code: "git remote -v" },
+      { type: "text", text: "After the first push, future pushes are just:" },
+      { type: "code", code: "git push" },
+      { type: "tip", text: "🎊 Refresh your GitHub page — your code should be there!" },
+    ],
+  },
   {
     id: 8,
     emoji: "🔄",
@@ -127,10 +137,11 @@ const steps = [
       { type: "text", text: "Here are the most common problems and how to fix them:" },
       { type: "fix", problem: '"git: command not found"', solution: "Git isn't installed or PATH isn't set. Re-install and choose the PATH option." },
       { type: "fix", problem: '"Authentication failed"', solution: "Use your token as the password, NOT your GitHub password." },
+      { type: "fix", problem: '"Permission denied (publickey)"', solution: "SSH key not added to GitHub. Re-run: ssh-add and check GitHub SSH settings." },
       { type: "fix", problem: "Committed the wrong file", solution: "Run: git reset --soft HEAD~1  (undoes last commit, keeps your files)" },
       { type: "fix", problem: "Staged something wrong", solution: "Run: git reset filename.txt  (unstages the file)" },
       { type: "fix", problem: "Push rejected / conflict", solution: "Run git pull first, then push again." },
-      { type: "code", code: `git reset --soft HEAD~1   # Undo last commit (keep files)\ngit reset filename.txt    # Unstage a file\ngit status                # Always check what's going on` },
+      { type: "code", code: `git reset --soft HEAD~1   # Undo last commit (keep files)\ngit reset filename.txt    # Unstage a file\ngit remote -v             # Check remote connection\nssh -T git@github.com     # Test SSH connection\ngit status                # Always check what's going on` },
     ],
   },
 ];
@@ -222,7 +233,6 @@ export default function GitGuide() {
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#020617", color: "#f1f5f9" }}>
-      {/* Sidebar */}
       <div style={{ width: 260, background: "#0f172a", borderRight: "1px solid #1e293b", overflowY: "auto", flexShrink: 0 }}>
         <div style={{ padding: "20px 16px 16px" }}>
           <div style={{ fontSize: 11, color: "#475569", letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>Git & GitHub</div>
@@ -263,7 +273,6 @@ export default function GitGuide() {
         </div>
       </div>
 
-      {/* Main */}
       <div style={{ flex: 1, overflowY: "auto" }}>
         <div style={{ maxWidth: 700, margin: "0 auto", padding: "32px 28px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
@@ -307,3 +316,17 @@ export default function GitGuide() {
     </div>
   );
 }
+```
+
+---
+
+**What changed:**
+- ✅ **Step 6** — completely replaced Token setup with full SSH setup guide
+- ✅ **Step 7** — now uses SSH URL (`git@github.com`) instead of HTTPS
+- ✅ **Step 9** — added SSH error fix for `Permission denied (publickey)`
+
+Now save the file and push:
+```
+git add .
+git commit -m "Update guide with SSH setup"
+git push
