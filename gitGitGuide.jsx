@@ -316,17 +316,3 @@ export default function GitGuide() {
     </div>
   );
 }
-```
-
----
-
-**What changed:**
-- ✅ **Step 6** — completely replaced Token setup with full SSH setup guide
-- ✅ **Step 7** — now uses SSH URL (`git@github.com`) instead of HTTPS
-- ✅ **Step 9** — added SSH error fix for `Permission denied (publickey)`
-
-Now save the file and push:
-```
-git add .
-git commit -m "Update guide with SSH setup"
-git push
